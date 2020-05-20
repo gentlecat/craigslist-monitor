@@ -1,11 +1,22 @@
 package retriever
 
 import (
-	"log"
 	"net/http"
+
+	"go.roman.zone/craig/parser"
 )
 
-func GetPage(url string) (*http.Response, error) {
-	log.Printf("Retrieving %s\n", url)
+func GetPrice(url string) (int, error) {
+
+	respose, err := getPage(url)
+	if err != nil {
+		return 0, err
+	}
+	defer respose.Body.Close()
+
+	return parser.GetPrice(respose.Body)
+}
+
+func getPage(url string) (*http.Response, error) {
 	return http.Get(url)
 }

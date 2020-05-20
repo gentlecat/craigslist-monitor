@@ -1,25 +1,38 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
 
-	"go.roman.zone/craig/parser"
 	"go.roman.zone/craig/retriever"
 )
 
 func main() {
-	url := "PUT YOUR URL HERE"
 
-	respose, err := retriever.GetPage(url)
+	file, err := os.Open("urls.txt")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	defer respose.Body.Close()
+	defer file.Close()
 
-	price, err := parser.GetPrice(respose.Body)
-	if err != nil {
-		panic(err)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+
+		url := scanner.Text()
+
+		price, err := retriever.GetPrice(url)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("$%d: %s\n", price, url)
 	}
 
-	fmt.Println(price)
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Done!")
 }

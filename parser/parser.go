@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-func GetPrice(pageContent io.Reader) (int, error) {
+func ExtractPrice(pageContent io.Reader) (int, error) {
 	doc, err := html.Parse(pageContent)
 	if err != nil {
 		return 0, err

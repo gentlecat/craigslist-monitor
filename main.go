@@ -24,7 +24,8 @@ func main() {
 
 		price, err := retriever.GetPrice(url)
 		if err != nil {
-			panic(err)
+			fmt.Printf("$....: %s\n", url)
+			continue
 		}
 
 		fmt.Printf("$%d: %s\n", price, url)

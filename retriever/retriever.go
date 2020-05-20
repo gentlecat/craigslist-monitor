@@ -14,7 +14,7 @@ func GetPrice(url string) (int, error) {
 	}
 	defer respose.Body.Close()
 
-	return parser.GetPrice(respose.Body)
+	return parser.ExtractPrice(respose.Body)
 }
 
 func getPage(url string) (*http.Response, error) {

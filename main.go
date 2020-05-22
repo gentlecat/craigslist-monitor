@@ -1,39 +1,30 @@
 package main
 
 import (
-	"bufio"
+	"flag"
 	"fmt"
 	"log"
-	"os"
 
-	"go.roman.zone/craig/retriever"
+	"go.roman.zone/craig"
 )
 
 func main() {
 
-	file, err := os.Open("urls.txt")
+	var searchURL string
+	flag.StringVar(&searchURL, "u", "url", "Craigslist search URL")
+	flag.Parse()
+
+	if len(searchURL) == 0 {
+		log.Fatal("URL argument is empty")
+	}
+
+	result, err := craig.SearchByURL(searchURL)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-
-		url := scanner.Text()
-
-		price, err := retriever.GetPrice(url)
-		if err != nil {
-			fmt.Printf("$....: %s\n", url)
-			continue
-		}
-
-		fmt.Printf("$%d: %s\n", price, url)
+	fmt.Printf("Found %d listings:\n", len(result.Listings))
+	for _, l := range result.Listings {
+		fmt.Printf("$%d | %s | %s\n", l.Price, l.Title, l.URL)
 	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Done!")
 }

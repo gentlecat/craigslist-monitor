@@ -66,3 +66,7 @@ func (dbClient *DataClient) RecordListing(listing craig.Listing) {
 	log.Printf("Recording a new listing: %+v", newListing)
 	dbClient.Database.Create(&newListing)
 }
+
+func (dbClient *DataClient) SetNote(listingID string, note string) {
+	dbClient.Database.Model(&ListingRecord{ID: listingID}).Updates(ListingRecord{Note: note})
+}

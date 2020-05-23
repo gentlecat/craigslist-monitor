@@ -27,6 +27,12 @@ type ListingRecord struct {
 	UpdatedAt time.Time
 }
 
+func (dbClient *DataClient) GetAllListingRecords() []ListingRecord {
+	var recs []ListingRecord
+	dbClient.Database.Preload("Prices").Find(&recs)
+	return recs
+}
+
 func (dbClient *DataClient) FindListingRecord(listingID string) ListingRecord {
 	var rec ListingRecord
 	dbClient.Database.Preload("Prices").Where("id = ?", listingID).First(&rec)

@@ -2,15 +2,18 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 
 	"go.roman.zone/craig"
+	"go.roman.zone/craigslist-monitor/data"
+)
+
+var (
+	searchURL string
 )
 
 func main() {
 
-	var searchURL string
 	flag.StringVar(&searchURL, "u", "url", "Craigslist search URL")
 	flag.Parse()
 
@@ -23,8 +26,20 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Found %d listings:\n", len(result.Listings))
+	db, err := data.OpenDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	dataClient := data.DataClient{
+		Database: db,
+	}
+
+	dataClient.Init()
+
+	log.Printf("Found %d listings:\n", len(result.Listings))
 	for _, l := range result.Listings {
-		fmt.Printf("$%d | %s | %s\n", l.Price, l.Title, l.URL)
+		dataClient.RecordListing(l)
 	}
 }

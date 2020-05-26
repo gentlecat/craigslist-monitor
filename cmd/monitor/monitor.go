@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"time"
 
 	"go.roman.zone/craig"
 	"go.roman.zone/craigslist-monitor/data"
@@ -21,11 +22,6 @@ func main() {
 		log.Fatal("URL argument is empty")
 	}
 
-	result, err := craig.SearchByURL(searchURL)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	db, err := data.OpenDB()
 	if err != nil {
 		log.Fatal(err)
@@ -38,8 +34,26 @@ func main() {
 
 	dataClient.Init()
 
-	log.Printf("Found %d listings:\n", len(result.Listings))
+	// Running the first refresh immediately
+	refreshListing(dataClient)
+
+	for range time.NewTicker(5 * time.Minute).C {
+		refreshListing(dataClient)
+	}
+}
+
+func refreshListing(dataClient data.DataClient) {
+
+	log.Println("Refreshing listings...")
+
+	result, err := craig.SearchByURL(searchURL)
+	if err != nil {
+		log.Println(err)
+	}
+
 	for _, l := range result.Listings {
 		dataClient.RecordListing(l)
 	}
+
+	log.Printf("Done refreshing. Found %d listings.", len(result.Listings))
 }

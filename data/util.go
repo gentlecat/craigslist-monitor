@@ -7,7 +7,7 @@ const (
 )
 
 type DataClient struct {
-	Database gorm.DB
+	Database *gorm.DB
 }
 
 // OpenDB opens a new connection to the database.
@@ -18,5 +18,5 @@ func OpenDB() (db *gorm.DB, err error) {
 }
 
 func (dbClient *DataClient) Init() {
-	dbClient.Database.AutoMigrate(&ListingRecord{}, &Price{})
+	dbClient.Database.AutoMigrate(&ListingRecord{}, &Price{}, &Image{})
 }

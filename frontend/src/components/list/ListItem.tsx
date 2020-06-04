@@ -1,21 +1,7 @@
 import { css } from '@emotion/core';
 import React from 'react';
-import axios from 'axios';
 
-const changeStatus = (id: number, isHidden: boolean) => {
-  return axios
-    .post(isHidden ? '/api/hide' : '/api/unhide', {
-      listingId: id,
-    })
-    .then(response => {
-      console.log(response);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-};
-
-export const ListItem = ({ listing }) => {
+export const ListItem = ({ listing, onHideListing }) => {
   return (
     <div
       css={css`
@@ -58,9 +44,7 @@ export const ListItem = ({ listing }) => {
           <a href={listing['url']}>{listing['title']}</a>
         </div>
         <div>
-          <button
-            onClick={() => changeStatus(listing['id'], !listing['isHidden'])}
-          >
+          <button onClick={onHideListing}>
             {listing['isHidden'] ? 'Unhide' : 'Hide'}
           </button>
         </div>

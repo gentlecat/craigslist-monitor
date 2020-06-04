@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { css } from '@emotion/core';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { loadListings, hideListing } from '../actions';
 import { ListItem } from './ListItem';
+import { SystemState } from '../reducers';
 
 interface State {
-  data: ListItem[] | undefined;
+  data: Listing[] | undefined;
   loadingState: LoadingState;
 }
 
-export interface ListItemInt {
+export interface Listing {
   id: string;
   title: string;
   url: string;
@@ -38,7 +41,20 @@ const loadList = () =>
       console.error(error);
     });
 
-export class Listings extends Component<any, State> {
+const changeStatus = (id: string, isHidden: boolean) => {
+  return axios
+    .post(isHidden ? '/api/hide' : '/api/unhide', {
+      listingId: id,
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
+
+class Listings extends Component<any, State> {
   public state = {
     data: undefined,
     loadingState: LoadingState.Loading,
@@ -46,13 +62,27 @@ export class Listings extends Component<any, State> {
 
   public componentDidMount = async () => {
     const data = await loadList();
+
+    this.props.loadListings(data);
+
     this.setState({ data, loadingState: LoadingState.Loaded });
   };
 
-  private renderList = (games: ListItemInt[]) => {
+  private hideListing = (listingID: string) => {
+    this.props.hideListing(listingID);
+    changeStatus(listingID, true);
+  };
+
+  private renderList = (listings: Listing[]) => {
     let items = [];
-    games.forEach(g => {
-      items.push(<ListItem key={g.id} listing={g} />);
+    listings.forEach(l => {
+      items.push(
+        <ListItem
+          key={l.id}
+          listing={l}
+          onHideListing={() => this.hideListing(l.id)}
+        />
+      );
     });
     return (
       <div
@@ -71,10 +101,17 @@ export class Listings extends Component<any, State> {
       case LoadingState.Loading:
         return <div>Loading...</div>;
       case LoadingState.Loaded:
-        return this.renderList(this.state.data);
+        return this.renderList(this.props.listings);
       case LoadingState.Error:
       default:
         return <div>Error occurred :(</div>;
     }
   };
 }
+
+export default connect(
+  (state: SystemState) => {
+    return { listings: state.listings };
+  },
+  { loadListings, hideListing }
+)(Listings);

@@ -3,7 +3,7 @@ import { css, Global, jsx } from '@emotion/core';
 import emotionNormalize from 'emotion-normalize';
 import { charterFont } from 'fonts';
 import { Header } from '../components/Header';
-import { Listings } from './list/Listings';
+import Listings from './list/Listings';
 
 export const Main = () => {
   return (

@@ -32,6 +32,8 @@ func (dbClient *DataClient) RecordListing(listing craig.Listing) {
 	existingRecord := dbClient.FindListingRecord(listing.ID)
 	if existingRecord.ID != "" {
 
+		dbClient.DeleteImages(listing.ID)
+
 		lastRecordedPrice := existingRecord.Prices[len(existingRecord.Prices)-1].Price
 
 		converted := convertListing(listing)
@@ -99,4 +101,8 @@ func (dbClient *DataClient) Unhide(listingID string) {
 func (dbClient *DataClient) MarkDeleted(listingID string) {
 	log.Printf("Marking listing %s as deleted", listingID)
 	dbClient.Database.Model(&ListingRecord{ID: listingID}).Updates(ListingRecord{Deleted: true})
+}
+
+func (dbClient *DataClient) DeleteImages(listingID string) {
+	dbClient.Database.Delete(Image{}, "listing_record_id = ?", listingID)
 }

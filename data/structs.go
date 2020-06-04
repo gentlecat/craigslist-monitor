@@ -15,7 +15,8 @@ type ListingRecord struct {
 	Images      []Image
 	Note        string
 
-	Hidden bool
+	Hidden  bool
+	Deleted bool
 
 	PostedAt  time.Time
 	UpdatedAt time.Time

@@ -10,7 +10,12 @@ import (
 
 func (dbClient *DataClient) GetAllListingRecords() []ListingRecord {
 	var recs []ListingRecord
-	dbClient.Database.Preload("Prices").Preload("Images").Find(&recs)
+	dbClient.Database.
+		Preload("Prices").
+		Preload("Images").
+		Order("posted_at desc").
+		Where("deleted IS 0 and hidden IS 0").
+		Find(&recs)
 	return recs
 }
 
@@ -34,7 +39,7 @@ func (dbClient *DataClient) RecordListing(listing craig.Listing) {
 		converted.Note = existingRecord.Note
 
 		if lastRecordedPrice != listing.Price {
-			log.Printf("Price of listing %s has changed. Updating [was $%d, now $%d]",
+			log.Printf("[refresher] Price of listing %s has changed. Updating [was $%d, now $%d]",
 				listing.ID, lastRecordedPrice, listing.Price)
 			converted.Prices = append(existingRecord.Prices, Price{Price: listing.Price, RecordedAt: time.Now()})
 		}
@@ -45,7 +50,7 @@ func (dbClient *DataClient) RecordListing(listing craig.Listing) {
 	}
 
 	newListing := convertListing(listing)
-	log.Printf("Recording a new listing: %s", newListing.URL)
+	log.Printf("[refresher] Recording a new listing: %s", newListing.URL)
 	dbClient.Database.Create(&newListing)
 }
 
@@ -61,6 +66,7 @@ func convertListing(listing craig.Listing) ListingRecord {
 		}},
 		Images:    convertImages(listing.Images),
 		Hidden:    false,
+		Deleted:   false,
 		PostedAt:  *listing.PostedAt,
 		UpdatedAt: *listing.UpdatedAt,
 	}
@@ -88,4 +94,9 @@ func (dbClient *DataClient) Hide(listingID string) {
 func (dbClient *DataClient) Unhide(listingID string) {
 	log.Printf("Un-hiding listing %s", listingID)
 	dbClient.Database.Model(&ListingRecord{ID: listingID}).Updates(ListingRecord{Hidden: false})
+}
+
+func (dbClient *DataClient) MarkDeleted(listingID string) {
+	log.Printf("Marking listing %s as deleted", listingID)
+	dbClient.Database.Model(&ListingRecord{ID: listingID}).Updates(ListingRecord{Deleted: true})
 }

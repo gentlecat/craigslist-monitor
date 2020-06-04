@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Main } from './components/Main';
 
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { Main } from './components/Main';
 import { reducer } from './components/reducers';
 
 const reduxStore = createStore(
@@ -11,7 +11,7 @@ const reduxStore = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-window.onload = function() {
+window.onload = function () {
   ReactDOM.render(
     <Provider store={reduxStore}>
       <Main />

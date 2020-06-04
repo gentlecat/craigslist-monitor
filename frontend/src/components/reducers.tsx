@@ -20,15 +20,13 @@ export const reducer = (state = initialState, action: any) => {
       };
 
     case Action.HideListing:
-      let updatedListings = [];
+      const updatedListings = [];
       for (const l of state.listings) {
         if (l.id !== action.listingID) {
           updatedListings.push(l);
         }
       }
-      return Object.assign({}, state, {
-        listings: updatedListings,
-      });
+      return { ...state, listings: updatedListings };
 
     default:
       return state;

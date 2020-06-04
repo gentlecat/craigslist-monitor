@@ -27,24 +27,25 @@
     "@emotion/core": "^10.0.6",
     "@types/react": "^16.7.21",
     "@types/react-dom": "^16.0.11",
-    "axios": "^0.18.0",
+    "axios": "^0.19.2",
     "babel-loader": "^8.0.5",
     "babel-plugin-emotion": "^10.0.6",
     "emotion-normalize": "^10.0.0",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "react-select": "^2.3.0",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
     "typescript": "^3.2.4",
     "webpack": "^4.29.0"
   },
   "devDependencies": {
-    "prettier": "^1.16.1",
-    "tslint": "^5.12.1",
+    "concurrently": "^5.2.0",
+    "prettier": "^2.0.5",
+    "tslint": "^6.1.2",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-microsoft-contrib": "^6.0.0",
-    "concurrently": "^4.1.0",
     "webpack-cli": "^3.2.1"
   }
 }

@@ -17,6 +17,8 @@ export interface Listing {
   url: string;
   prices: Price[];
   images: string[];
+  postedAt: Date;
+  updatedAt: Date;
   isHidden: boolean;
 }
 
@@ -33,11 +35,11 @@ enum LoadingState {
 const loadList = () =>
   axios
     .get('/api/list')
-    .then(response => {
+    .then((response) => {
       console.log(response.data);
       return response.data;
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
     });
 
@@ -46,10 +48,10 @@ const changeStatus = (id: string, isHidden: boolean) => {
     .post(isHidden ? '/api/hide' : '/api/unhide', {
       listingId: id,
     })
-    .then(response => {
+    .then((response) => {
       console.log(response);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
     });
 };
@@ -74,8 +76,8 @@ class Listings extends Component<any, State> {
   };
 
   private renderList = (listings: Listing[]) => {
-    let items = [];
-    listings.forEach(l => {
+    const items = [];
+    listings.forEach((l) => {
       items.push(
         <ListItem
           key={l.id}

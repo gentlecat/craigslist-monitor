@@ -1,7 +1,17 @@
 import { css } from '@emotion/core';
 import React from 'react';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { Listing } from './Listings';
 
-export const ListItem = ({ listing, onHideListing }) => {
+dayjs.extend(relativeTime);
+
+type ListItemProps = {
+  listing: Listing;
+  onHideListing: Function;
+};
+
+export const ListItem = ({ listing, onHideListing }: ListItemProps) => {
   return (
     <div
       css={css`
@@ -20,7 +30,7 @@ export const ListItem = ({ listing, onHideListing }) => {
         `}
       >
         <img
-          src={listing['images'][0]}
+          src={listing.images[0]}
           css={css`
             max-width: 200px;
             max-height: 200px;
@@ -33,19 +43,37 @@ export const ListItem = ({ listing, onHideListing }) => {
           flex: 1;
         `}
       >
-        <div
-          css={css`
-            font-weight: bold;
-          `}
-        >
-          ${listing['prices'][0]['price']}
+        <div>
+          <span
+            css={css`
+              font-weight: bold;
+            `}
+          >
+            $
+            {listing.prices[0].price}
+          </span>
+          {' '}
+          – 
+          {' '}
+          <a href={listing.url}>{listing.title}</a>
         </div>
         <div>
-          <a href={listing['url']}>{listing['title']}</a>
+          Posted
+          {' '}
+          <span title={listing.postedAt.toString()}>
+            {dayjs(listing.postedAt).fromNow()}
+          </span>
         </div>
         <div>
-          <button onClick={onHideListing}>
-            {listing['isHidden'] ? 'Unhide' : 'Hide'}
+          Last updated
+          {' '}
+          <span title={listing.updatedAt.toString()}>
+            {dayjs(listing.updatedAt).fromNow()}
+          </span>
+        </div>
+        <div>
+          <button onClick={() => onHideListing()}>
+            {listing.isHidden ? 'Unhide' : 'Hide'}
           </button>
         </div>
         <div>

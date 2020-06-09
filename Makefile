@@ -13,7 +13,7 @@ test-go : fmt-go
 test-js : fmt-js
 	cd frontend && yarn run lint
 
-rebuild : fmt-go
+rebuild : test-go test-js
 	go build -a -o ./build/monitor ./cmd/monitor/monitor.go
 	go build -a -o ./build/browser ./cmd/browser/browser.go
 
@@ -23,7 +23,7 @@ build-monitor : fmt-go
 build-browser : fmt-go
 	go build -o ./build/browser ./cmd/browser/browser.go
 
-run : build-browser build-monitor test-js
+run : build-browser build-monitor
 	# Using `concurrently` from npm to run both front-end builds and back-end at
 	# the same time.
 	cd frontend && \

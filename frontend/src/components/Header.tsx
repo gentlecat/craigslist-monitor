@@ -7,6 +7,7 @@ export const Header = () => {
       <h1
         css={css`
           font-size: 2em;
+          text-align: center;
         `}
       >
         Craigslist Monitor

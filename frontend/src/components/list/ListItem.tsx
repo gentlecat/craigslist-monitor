@@ -2,84 +2,80 @@ import { css } from '@emotion/core';
 import React from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Note } from './Note';
 import { Listing } from './Listings';
+import { Metadata } from './Metadata';
 
 dayjs.extend(relativeTime);
 
 type ListItemProps = {
   listing: Listing;
   onHideListing: Function;
+  onNoteUpdate: Function;
 };
 
-export const ListItem = ({ listing, onHideListing }: ListItemProps) => {
-  return (
-    <div
-      css={css`
-        flex: 1;
-        display: flex;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #7d7d7d1c;
-        ${listing.isHidden ? 'opacity: 0.4;' : ''}
-      `}
-    >
+export const ListItem = React.memo(
+  ({ listing, onHideListing, onNoteUpdate }: ListItemProps) => {
+    return (
       <div
         css={css`
           flex: 1;
-          max-width: 230px;
+          display: flex;
+          padding-top: 20px;
+          padding-bottom: 20px;
+          border-bottom: 1px solid #7d7d7d1c;
+          ${listing.isHidden ? 'opacity: 0.4;' : ''}
         `}
       >
-        <img
-          src={listing.images[0]}
+        <div
           css={css`
-            max-width: 200px;
-            max-height: 200px;
+            flex: 1;
+            max-width: 230px;
+            text-align: center;
           `}
-        />
-      </div>
-
-      <div
-        css={css`
-          flex: 1;
-        `}
-      >
-        <div>
-          <span
+        >
+          <img
+            src={listing.images[0]}
             css={css`
-              font-weight: bold;
+              max-width: 200px;
+              max-height: 200px;
+            `}
+          />
+        </div>
+
+        <div
+          css={css`
+            flex: 1;
+            margin-left: 20px;
+          `}
+        >
+          <Metadata listing={listing} />
+
+          <div
+            css={css`
+              margin-top: 20px;
             `}
           >
-            $
-            {listing.prices[0].price}
-          </span>
-          {' '}
-          – 
-          {' '}
-          <a href={listing.url}>{listing.title}</a>
+            <Note
+              note={listing.note}
+              onNoteUpdate={(newNote: string) =>
+                onNoteUpdate(listing.id, newNote)}
+            />
+          </div>
         </div>
-        <div>
-          Posted
-          {' '}
-          <span title={listing.postedAt.toString()}>
-            {dayjs(listing.postedAt).fromNow()}
-          </span>
-        </div>
-        <div>
-          Last updated
-          {' '}
-          <span title={listing.updatedAt.toString()}>
-            {dayjs(listing.updatedAt).fromNow()}
-          </span>
-        </div>
-        <div>
-          <button onClick={() => onHideListing()}>
-            {listing.isHidden ? 'Unhide' : 'Hide'}
+
+        <div
+          css={css`
+            flex: 1;
+            max-width: 60px;
+            margin-left: 20px;
+          `}
+        >
+          <button onClick={() => onHideListing(listing.id)}>
+            {listing.isHidden ? 'Unhide' : '🗑'}
           </button>
         </div>
-        <div>
-          <textarea rows="3" cols="33" placeholder="Notes..." />
-        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);

@@ -35,6 +35,7 @@ func makeRouter() *mux.Router {
 	r.HandleFunc("/api/list", api_handlers.GetListingsHandler).Methods("GET")
 	r.HandleFunc("/api/hide", api_handlers.HideListingHandler).Methods("POST")
 	r.HandleFunc("/api/unhide", api_handlers.UnhideListingHandler).Methods("POST")
+	r.HandleFunc("/api/note", api_handlers.SetNoteHandler).Methods("POST")
 
 	// Static files
 	// TODO: Get static dir path from outside

@@ -96,3 +96,38 @@ func UnhideListingHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func SetNoteHandler(w http.ResponseWriter, r *http.Request) {
+
+	type SetNoteInput struct {
+		ListingID string `json:"listingId"`
+		Note      string `json:"note"`
+	}
+
+	var p SetNoteInput
+
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	db, err := data.OpenDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	dataClient := data.DataClient{
+		Database: db,
+	}
+
+	if len(p.ListingID) < 1 {
+		http.Error(w, "You have to specify `listingId`.", http.StatusBadRequest)
+		return
+	}
+
+	dataClient.SetNote(p.ListingID, p.Note)
+
+	w.WriteHeader(http.StatusOK)
+}

@@ -29,11 +29,17 @@ export const Main = () => {
       <div
         css={css`
           padding: 20px;
-          max-width: 1200px;
+          max-width: 900px;
           margin: 0 auto;
         `}
       >
-        <Header />
+        <div
+          css={css`
+            margin-bottom: 40px;
+          `}
+        >
+          <Header />
+        </div>
         <Listings />
       </div>
     </div>

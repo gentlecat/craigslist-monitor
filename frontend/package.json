@@ -32,6 +32,8 @@
     "babel-plugin-emotion": "^10.0.6",
     "dayjs": "^1.8.28",
     "emotion-normalize": "^10.0.0",
+    "immer": "^6.0.9",
+    "lodash": "^4.17.15",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

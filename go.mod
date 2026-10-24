@@ -8,6 +8,6 @@ require (
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/jinzhu/gorm v1.9.12
-	go.roman.zone/craig v0.0.0-20190826002048-975a908825c4
+	go.roman.zone/craig v0.0.0-20200603055014-0bcc4e734f36
 	golang.org/x/net v0.0.0-20200520182314-0ba52f642ac2 // indirect
 )
